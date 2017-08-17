@@ -8,7 +8,6 @@ var homeUrl = "https://shor10.glitch.me/r/";
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
-app.use(express.static('node_modules/clipboard/dist'));
 
 function redirector(urlName, response){//url name is the last 4 characters in short-url. mydomain.com/a3fs => a3fs
   //search for urlName in in db.
@@ -32,7 +31,7 @@ function redirector(urlName, response){//url name is the last 4 characters in sh
   
 }//end redirector function
 
-function generateUniqueName(dbc, response, db, full_url){ //dbc === data base collection
+function generateUniqueName(dbc, response, db, full_url, useJSONP){ //dbc === data base collection
   var new_name = randomString({length:4}).toLowerCase();
   //check if new name exists in db.
    dbc.count({name: new_name}, (err, count)=>{
@@ -40,30 +39,28 @@ function generateUniqueName(dbc, response, db, full_url){ //dbc === data base co
       
           if(count > 0){//new_name exists ,generate a new string
             console.log("defined");
-            generateUniqueName(dbc, response, db);
+            generateUniqueName(dbc, response, db, full_url, useJSONP);
           }else{//new_name doesn't exist. 
             console.log("new_name is available, good to go.");
             //create a new db object for new_name and insert it into the db
-            dbc.insert(
-              {
-                name:new_name,
-                full_url: full_url,
-                short_url: homeUrl + new_name
-                
-              }, (err, element)=>{
+            var url_object = {
+              name: new_name, 
+              full_url: full_url,
+              short_url: homeUrl + new_name
+            };
+            dbc.insert(url_object, (err, element)=>{//callback
                 if(err) throw err; 
-                db.close(response.end(JSON.stringify({
-                  name: new_name,
-                  full_url: full_url,
-                  short_url: homeUrl + new_name
-                })));
+                if(useJSONP)
+                  db.close(response.jsonp(url_object).end());
+                else
+                  db.close(response.json(url_object).end());
             });    
           }            
         });
   
 }//end uniqueString()
 
-function shorten(new_url, response){
+function shorten(new_url, response, useJSONP){
   //Connect to db and serch for new_url  
   mongo.connect(MONGODB_URI, (err, db) =>{
     if(err) throw err; 
@@ -71,15 +68,18 @@ function shorten(new_url, response){
     
     links.find({
       full_url: new_url
-    },{_id:0}).toArray((err, docs)=>{
+    }).toArray((err, docs)=>{
       if(err) throw err; 
       console.log("still working");
-      var result = JSON.stringify(docs[0]); 
+      var result = docs[0]; 
       //check if result is defined
       if(!Boolean(result)){ //new_url not defined in db
-        generateUniqueName(links, response, db, new_url);
+        generateUniqueName(links, response, db, new_url, useJSONP);
       }else{//new_url already exists in the db, just send the user the existing object. 
-        db.close(response.end(result));
+        if(useJSONP)
+          db.close(response.jsonp(result).end());
+        else
+          db.close(response.json(result).end());
       }
     });
     
@@ -93,10 +93,16 @@ app.get("/r/:name", (req, res)=>{
 
 app.get("/new/",(req,res) =>{
   var new_url = req.query.url;
+  var useJSONP = Boolean(req.query.callback);
   if(new_url.includes("http://") || new_url.includes("https://")){
-    shorten(new_url, res);
+    shorten(new_url, res, useJSONP);
   }else{
-    res.end(JSON.stringify({name:"error",full_url:"error",short_url:"error", error:"You must include http:// or https:// in your url"}));
+    var errorResponse = {name:"error",full_url:"error",short_url:"error", error:"You must include http:// or https:// in your url"};
+    
+    if(useJSONP)
+      res.jsonp(errorResponse).end();
+    else
+      res.json(errorResponse).end();
   }
 });
 
