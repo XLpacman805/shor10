@@ -3,10 +3,22 @@
 
 /* You might want to try something fancier: */
 /* less: http://lesscss.org/ */
-body{
-}
 
 nav{
   margin-bottom: 1em;
   background-color: #673ab7;
+}
+.home{
+  background-color:white;
+  height:100vh;
+}
+.api{
+  padding-top:3em;
+  background-color: #2e7d32;
+  height:100vh;
+}
+.about{
+  padding-top:3em;
+  height:100vh;
+  background-color:#6a1b9a;
 }

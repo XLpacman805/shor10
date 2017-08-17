@@ -1,27 +1,24 @@
-Welcome to the Glitch BETA
+Welcome to Shor10
 =========================
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+***Shor10*** is a URL shortening microservice. It can be accessed via a browsers or through the API. The API responds in JSON format like so: 
 
-**Glitch** is the friendly commmunity where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+```
+{
+"_id": "5993a2238c07b33b9aaa272a", 
+"name": "a9in", 
+"full_url": "http://twitter.com", 
+"short_url": "https://shor10.glitch.me/r/a9in"
+}
 
-Find out more [about Glitch](https://glitch.com/about).
+```
 
+This project is live and fully functional. It utilized NodeJS, ExpressJS, MongoDB, and a few other dependencies for the front end. It can respond with JSONP if you append `&callback=?` to the URL query. 
 
-Your Project
-------------
+Example ***GET*** request: 
 
-On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
+`https://shor10.glitch.me/new/url?=http://someDomain.com&callback=?`
 
-On the back-end,
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
+You can tinker with the API on a ***codepen*** I made used for testing. `https://codepen.io/xlpacman805/pen/oeopEq`
 
-
-Made by [Fog Creek](https://fogcreek.com/)
--------------------
-
-\ ゜o゜)ノ
+In reality this is more of a URL lengthener. However if this were to be deployed with a short domain name, it would work great. 
