@@ -4,23 +4,20 @@
 // by default, you've got jQuery,
 // add other scripts at the bottom of index.html
 
+
 $(function() {
-  console.log('hello world :o');
+  $(".button-collapse").sideNav();
+  var x = "paste me";
+  $("#go").click(()=>{
+    var new_url = $("#url_input").val().toString();
+    
+    $.getJSON("https://shor10.glitch.me/new/?url="+new_url, (data) =>{
+      var short = data.short_url;
+      var toastContent = $('<span>Copy to Clipboard</span>').add($('<button class="waves-effect waves-light btn-flat toast-action copy-btn" data-clipboard-text='+short+'><i class="fa fa-clipboard" aria-hidden="true"></i></button>'));
+      Materialize.toast(toastContent, 10000,)
+      new Clipboard(".copy-btn"); //Clipboard is called in Index.html
+    });    
+  });
   
-  $.get('/dreams', function(dreams) {
-    dreams.forEach(function(dream) {
-      $('<li></li>').text(dream).appendTo('ul#dreams');
-    });
-  });
+});//end doc ready
 
-  $('form').submit(function(event) {
-    event.preventDefault();
-    var dream = $('input').val();
-    $.post('/dreams?' + $.param({dream: dream}), function() {
-      $('<li></li>').text(dream).appendTo('ul#dreams');
-      $('input').val('');
-      $('input').focus();
-    });
-  });
-
-});

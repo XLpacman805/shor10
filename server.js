@@ -7,7 +7,8 @@ var homeUrl = "https://shor10.glitch.me/r/";
 
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static('views'));
+app.use(express.static('public'));
+app.use(express.static('node_modules/clipboard/dist'));
 
 function redirector(urlName, response){//url name is the last 4 characters in short-url. mydomain.com/a3fs => a3fs
   //search for urlName in in db.
