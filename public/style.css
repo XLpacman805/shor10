@@ -1,0 +1,12 @@
+/* styles */
+/* called by your view template */
+
+/* You might want to try something fancier: */
+/* less: http://lesscss.org/ */
+body{
+}
+
+nav{
+  margin-bottom: 1em;
+  background-color: #673ab7;
+}
