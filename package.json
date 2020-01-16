@@ -16,7 +16,7 @@
     "clipboard": "^1.7.1"
   },
   "engines": {
-    "node": "8.x"
+    "node": "10.x"
   },
   "repository": {
     "url": "https://github.com/XLpacman805/shor10"
