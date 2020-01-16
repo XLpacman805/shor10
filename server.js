@@ -1,7 +1,13 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
-app.get("/api/shorturl/new", (req, res) => {
+  app.use(bodyParser.urlencoded({ extended: true }));
+  
+
+app.post("/api/shorturl/new/", (req, res) => {
+    console.log(req.body);
+
     res.json({
         data: "hello world"
     });
