@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /**
  * 
  * @param {string} urlString - A url string to be validated.
- * @returns {Object} - Returns an object containing the properties .isValid, (.url, or .error) depending on if the url validates. 
+ * @returns {Object} - Returns an object containing the properties .isValid, and .url
  */
 function validateUrl(urlString) {
   let isValid = false;
@@ -17,10 +17,11 @@ function validateUrl(urlString) {
   try {
     url = new URL(urlString);
     isValid = true;
-    return {isValid: isValid, url: url};
+    
   } catch (error) {
-    return {isValid, error: "Not a url. Please ensure to include protocol and host."};
+    console.log(error);
   }
+  return {isValid: isValid, url: url};
 };  
 
 app.post("/api/shorturl/new/", (req, res) => {
@@ -28,14 +29,12 @@ app.post("/api/shorturl/new/", (req, res) => {
     let originalUrl = req.body.url;
     let validUrl = validateUrl(originalUrl);
     if (validUrl.isValid) {
-      output = "valid url input"; 
+      output = {data: "valid url input"}; 
     } else {
-      output = validUrl.error;
+      output = {error: "Invalid URL"};
     }
 
-    res.json({
-        data: output
-    });
+    res.json(output);
 });
 
 // listen for requests //process.env.PORT
