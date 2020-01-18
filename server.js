@@ -1,7 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const url = require('url');
+const database = require('./database.service');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -25,19 +27,21 @@ function validateUrl(urlString) {
 };  
 
 app.post("/api/shorturl/new/", (req, res) => {
-    let output;
     let originalUrl = req.body.url;
     let validUrl = validateUrl(originalUrl);
-    if (validUrl.isValid) {
-      output = {data: "valid url input"}; 
+    if (validUrl.isValid) { 
+      database.createShortUrl(validUrl.url.href)
+        .then((result) => {
+          res.json({data: result});
+        }).catch((reason) => {
+          res.json({error: reason});
+        });
     } else {
-      output = {error: "Invalid URL"};
+      res.json({error: "Invalid URL"});
     }
-
-    res.json(output);
 });
 
 // listen for requests //process.env.PORT
-const listener = app.listen(8080, () => {
+const listener = app.listen(process.env.PORT, () => {
     console.log('Your app is listening on port ' + listener.address().port);
   });
