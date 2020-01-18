@@ -6,10 +6,10 @@ const bodyParser = require('body-parser');
   
 
 app.post("/api/shorturl/new/", (req, res) => {
-    console.log(req.body);
+    let body = req.body;
 
     res.json({
-        data: "hello world"
+        data: body
     });
 });
 
