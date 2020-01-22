@@ -1,8 +1,19 @@
 require('dotenv').config();
-const mongo = require('mongodb').MongoClient;
-const MONGODB_URI = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@ds062059.mlab.com:62059/url-shortener-development`;
 const nanoid = require('nanoid');
+const test = require('assert');
+const MongoClient = require('mongodb').MongoClient;
+const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@url-shortener-h3i7u.mongodb.net/test`;
+const dbName = "development";
 
+MongoClient.connect(MONGODB_URI, function(err, client) {
+    // Create a collection we want to drop later
+    const col = client.db(dbName).collection('urls');
+    // Show that duplicate records got dropped
+    col.find({}).toArray(function(err, items) {
+        console.log(items);
+        client.close();
+    });
+  });
 
 /**
  * Finds the short URL in the database by the uniqueId.
