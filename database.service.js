@@ -48,9 +48,8 @@ exports.createShortUrl = function (urlString) {
         // if short url not found: 
         //
 
-
         if (true) {
-            resolve(url);
+            resolve(urlString); //Resolve parameter just to test data flow. Remove this later.
         } else {
             reject("Failure in database.service.createShortUrl");
         }
