@@ -3,7 +3,6 @@ const nanoid = require('nanoid');
 const MongoClient = require('mongodb').MongoClient;
 const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@url-shortener-h3i7u.mongodb.net/test`;
 const dbName = "development";
-const os = require('os');
 
 /**
  * Finds the short URL in the database by the uniqueId.
