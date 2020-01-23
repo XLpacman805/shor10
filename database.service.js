@@ -22,7 +22,6 @@ exports.createShortUrl = function (urlString) {
                 if (err) reject (err);
                 if (result.result.ok === 1) {
                     let doc = result.ops[0];
-                    delete doc._id;
                     resolve(doc);
                 }
             });

@@ -1,24 +1,44 @@
-Welcome to Shor10
-=========================
+# URL Shortening Microservice - Shor10 #
 
-***Shor10*** is a URL shortening microservice. It can be accessed via a browsers or through the API. The API responds in JSON format like so: 
+## Shor10 has two functions ##
 
-```
+1. Take a long url and create a short unique ID for it.
+2. Given the short unique ID, redirect the user to the long url.
+
+### Creating a short url ###
+Use a POST request to the [host]/api/shorturl/new/ endpoint with content type of x-www-form-urlencoded. The body needs to contain a key value pair in the parameters. Key = "url". Value = "https://somewebsite.com/". 
+
+Request using Javascript :
+```Javascript
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+var urlencoded = new URLSearchParams();
+urlencoded.append("url", "https://g20.bimmerpost.com/forums/showthread.php?t=1566262");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: urlencoded,
+  redirect: 'follow'
+};
+
+fetch("localhost:8080/api/shorturl/new/", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+  ```
+
+Response:
+
+```JSON
 {
-"_id": "5993a2238c07b33b9aaa272a", 
-"name": "a9in", 
-"full_url": "http://twitter.com", 
-"short_url": "https://shor10.glitch.me/r/a9in"
+    "original_url": "https://g20.bimmerpost.com/forums/showthread.php?t=1566262",
+    "short_url": "tlv3FtF"
 }
 
 ```
+### Using The Short URL ###
+Just append the short url string to the root domain. The server will redirect the browser to the original url. 
 
-This project is live and fully functional. It utilized NodeJS, ExpressJS, MongoDB, and a few other dependencies for the front end. It can respond with JSONP if you append `&callback=?` to the URL query. 
-
-Example ***GET*** request: 
-
-`https://shor10.glitch.me/new/url?=http://someDomain.com&callback=?`
-
-You can tinker with the API on a ***codepen*** I made used for testing. `https://codepen.io/xlpacman805/pen/oeopEq`
-
-In reality this is more of a URL lengthener. However if this were to be deployed with a short domain name, it would work great. 
+[rootdomain].com/tlv3FtF redirects to https://g20.bimmerpost.com/forums/showthread.php?t=1566262. 

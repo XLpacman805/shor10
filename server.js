@@ -32,7 +32,10 @@ app.post("/api/shorturl/new/", (req, res) => {
     if (validUrl.isValid) { 
       database.createShortUrl(validUrl.url.href)
         .then((result) => {
-          res.json({data: result});
+          res.json({
+            original_url: result.original_url, 
+            short_url: result.short_url
+          });
         }).catch((reason) => {
           res.json({error: reason});
         });
