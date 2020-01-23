@@ -5,22 +5,6 @@ const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSW
 const dbName = "development";
 
 /**
- * Finds the short URL in the database by the uniqueId.
- * @param {String} uniqueId 
- */
-function getShortUrl (uniqueId) {
-    // connect to mongodb. 
-    //find by id:uniqueId. 
-    //resolve promise with:
-    return {
-        original_url: "https://www.freecodecamp.org",
-        short_url: 545
-      }
-
-      // reject promise with an error. 
-}
-
-/**
  * Creates a short url and returns one it. 
  * @param {URL.href} urlString - The full valid URL string. 
  * @returns {Promise}
@@ -28,7 +12,7 @@ function getShortUrl (uniqueId) {
 exports.createShortUrl = function (urlString) {
     return new Promise((resolve, reject) => {
         let uniqueId = nanoid(7); 
-        MongoClient.connect(MONGODB_URI, function(err, client) {
+        MongoClient.connect(MONGODB_URI, (err, client) => {
             if (err) throw err;
             // Create a collection we want to drop later
             const collection = client.db(dbName).collection('urls');
@@ -43,5 +27,19 @@ exports.createShortUrl = function (urlString) {
                 }
             });
           });
+    });
+}
+
+exports.getLongUrl = function (shortUrl) {
+    return new Promise((resolve, reject) => {
+        MongoClient.connect(MONGODB_URI, (err, client) => {
+            if (err) throw err; 
+            const collection = client.db(dbName).collection("urls");
+            query = {"short_url": shortUrl}
+            collection.findOne(query, (err, result) =>{
+                if (err) reject (err);
+                resolve (result);
+            });
+        });
     });
 }

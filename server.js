@@ -41,6 +41,17 @@ app.post("/api/shorturl/new/", (req, res) => {
     }
 });
 
+app.get("/api/shorturl/:unique_id", (req, res) => {
+  let parameter = req.params.unique_id;
+  database.getLongUrl(parameter)
+    .then((result) => {
+      res.redirect(result.original_url);
+    }).catch((err) => {
+      console.log(err);
+      res.json({error: err});
+    });
+});
+
 // listen for requests //process.env.PORT
 const listener = app.listen(process.env.PORT, () => {
     console.log('Your app is listening on port ' + listener.address().port);
