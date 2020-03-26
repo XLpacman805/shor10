@@ -41,4 +41,4 @@ Response:
 ### Using The Short URL ###
 Just append the short url string to the root domain. The server will redirect the browser to the original url. 
 
-[rootdomain].com/tlv3FtF redirects to https://g20.bimmerpost.com/forums/showthread.php?t=1566262. 
+[rootdomain].com/api/shorturl/tlv3FtF redirects to https://g20.bimmerpost.com/forums/showthread.php?t=1566262. 
